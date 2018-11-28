@@ -22,6 +22,7 @@ import (
 	"io"
 	"net"
 	"sync"
+	"time"
 
 	"github.com/elastic/go-lumber/lj"
 	"github.com/elastic/go-lumber/log"
@@ -36,9 +37,12 @@ type Server struct {
 }
 
 type Config struct {
-	TLS     *tls.Config
-	Handler HandlerFactory
-	Channel chan *lj.Batch
+	TLS               *tls.Config
+	Handler           HandlerFactory
+	Channel           chan *lj.Batch
+	KeepAliveIdle     time.Duration
+	KeepAliveCount    int
+	KeepAliveInterval time.Duration
 }
 
 type Handler interface {
@@ -109,6 +113,11 @@ func ListenAndServe(addr string, opts Config) (*Server, error) {
 		}
 	}
 
+	// Enable tcp keepalive by default
+	opts.KeepAliveIdle = time.Duration(2 * time.Minute)
+	opts.KeepAliveCount = 4
+	opts.KeepAliveInterval = time.Duration(5 * time.Second)
+
 	return ListenAndServeWith(binder, addr, opts)
 }
 
@@ -141,6 +150,13 @@ func (s *Server) run() {
 		client, err := s.listener.Accept()
 		if err != nil {
 			break
+		}
+
+		if s.opts.KeepAliveIdle > 0 && s.opts.KeepAliveCount > 0 {
+			err := SetKeepAlive(client, s.opts.KeepAliveIdle, s.opts.KeepAliveCount, s.opts.KeepAliveInterval)
+			if err != nil {
+				log.Printf("Set connection %v keepalive fail: %v", client.RemoteAddr(), err)
+			}
 		}
 
 		log.Printf("New connection from %v", client.RemoteAddr())
