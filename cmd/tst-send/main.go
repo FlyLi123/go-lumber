@@ -32,7 +32,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/elastic/go-lumber/client/v2"
+	"github.com/FlyLi123/go-lumber/client/v2"
 )
 
 func main() {

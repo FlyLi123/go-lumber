@@ -24,10 +24,10 @@ import (
 	"net"
 	"sync"
 
-	"github.com/elastic/go-lumber/lj"
-	"github.com/elastic/go-lumber/log"
-	"github.com/elastic/go-lumber/server/v1"
-	"github.com/elastic/go-lumber/server/v2"
+	"github.com/FlyLi123/go-lumber/lj"
+	"github.com/FlyLi123/go-lumber/log"
+	"github.com/FlyLi123/go-lumber/server/v1"
+	"github.com/FlyLi123/go-lumber/server/v2"
 )
 
 // Server serves multiple lumberjack clients.

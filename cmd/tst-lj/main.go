@@ -32,8 +32,8 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/elastic/go-lumber/lj"
-	"github.com/elastic/go-lumber/server"
+	"github.com/FlyLi123/go-lumber/lj"
+	"github.com/FlyLi123/go-lumber/server"
 )
 
 type rateLimiter struct {

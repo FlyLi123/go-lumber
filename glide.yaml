@@ -1,4 +1,4 @@
-package: github.com/elastic/go-lumber
+package: github.com/FlyLi123/go-lumber
 import:
 - package: github.com/klauspost/compress
   subpackages:
