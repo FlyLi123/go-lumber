@@ -82,6 +82,11 @@ func NewWithListener(l net.Listener, opts Config) (*Server, error) {
 		opts:     opts,
 	}
 
+	// Enable tcp keepalive by default
+	s.opts.KeepAliveIdle = time.Duration(2 * time.Minute)
+	s.opts.KeepAliveCount = 4
+	s.opts.KeepAliveInterval = time.Duration(5 * time.Second)
+
 	if s.ch == nil {
 		s.ownCH = true
 		s.ch = make(chan *lj.Batch, 128)
@@ -112,11 +117,6 @@ func ListenAndServe(addr string, opts Config) (*Server, error) {
 			return tls.Listen(network, addr, opts.TLS)
 		}
 	}
-
-	// Enable tcp keepalive by default
-	opts.KeepAliveIdle = time.Duration(2 * time.Minute)
-	opts.KeepAliveCount = 4
-	opts.KeepAliveInterval = time.Duration(5 * time.Second)
 
 	return ListenAndServeWith(binder, addr, opts)
 }
